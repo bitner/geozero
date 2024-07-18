@@ -3,7 +3,7 @@ use crate::{FeatureProcessor, GeomProcessor, GeozeroDatasource, GeozeroGeometry}
 
 use std::io::Read;
 use wkt::types::{Coord, LineString, Polygon};
-use wkt::Geometry;
+use wkt::Wkt as Geometry;
 
 /// A wrapper around a WKT String or String slice.
 #[derive(Debug)]
@@ -78,7 +78,7 @@ pub fn read_wkt<R: Read, P: GeomProcessor>(reader: &mut R, processor: &mut P) ->
     let mut wkt_string = String::new();
     reader.read_to_string(&mut wkt_string)?;
     let wkt = wkt::Wkt::from_str(&wkt_string).map_err(|e| GeozeroError::Geometry(e.to_string()))?;
-    process_wkt_geom(&wkt.item, processor)
+    process_wkt_geom(&wkt, processor)
 }
 
 /// Process WKT geometry
